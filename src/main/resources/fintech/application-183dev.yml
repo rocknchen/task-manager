@@ -1,6 +1,6 @@
 #Rock Local Service, connect to ROCK_DEV env
 server:
-  port: ${SERVER_PORT:10001}
+  port: ${SERVER_PORT:11002}
 
 persistent:
   type: FILE
