@@ -1,0 +1,14 @@
+version: 0.0.1
+taskList:
+# HK SOD
+  - name: Check PnL Mark
+    expression: 0 0 12 ? * MON-FRI, 0 0 16 ? * MON-FRI
+
+# HK IntraDay
+  - name: Downstream SCB PB
+    expression: 0 0 12 ? * MON-FRI, 0 0 16 ? * MON-FRI
+
+# HK EOD
+  - name: Check EOD Quote - Future Commodity
+    active: false
+    expression: 0 0 16 ? * MON-FRI

@@ -1,0 +1,28 @@
+version: 0.0.1
+taskList:
+  # HK EOD T-1
+  - nameList:
+      - HEALTH_CHECK EOD PnL Mark HTM T-1
+      - HEALTH_CHECK EOD PnL Mark NOFX T-1
+    active: false
+    expression: 0 45 9 ? * TUE-SAT, 0 10 10 ? * TUE-SAT
+
+  - name: HEALTH_CHECK EOD Pricing Analysis T-1
+    active: false
+    expression: 0 45 9 ? * TUE-SAT
+
+  # HK SOD
+
+  # HK IntraDay
+  - name: DOWNSTREAM SCB PB
+    expression: 0 0 12 ? * MON-FRI, 0 0 16 ? * MON-FRI
+
+  # HK EOD
+  - name: HEALTH_CHECK EOD Quote - Future Commodity T
+    active: false
+    expression: 0 0 16 ? * MON-FRI
+
+  # BACK LOG
+  - name: HEALTH_CHECK EOD PnL Mark T
+    active: false
+    expression: 0 0 21 ? * MON-FRI
