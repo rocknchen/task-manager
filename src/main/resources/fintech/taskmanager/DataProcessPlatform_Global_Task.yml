@@ -1,0 +1,18 @@
+# calendar: NATURE
+# timeZone: NONE, need to set in the spec job.
+
+version: 0.0.1
+taskList:
+  # Global Snapshot
+  - id: Global Snapshot
+    active: false
+    chain:
+      - type: LIST
+        idList:
+          - DATA_CENTER EOD Quote T
+          - DATA_CENTER TOMS MESSAGE T
+          - DATA_CENTER HK FICC Process Trade T
+        policy: FAF
+    timeZone: HKT
+    triggerList:
+      - 0 59 23 * * ?

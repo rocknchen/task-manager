@@ -1,28 +1,132 @@
+# calendar: HKT
+# timeZone: HKT
+
 version: 0.0.1
 taskList:
+  ##### HK EOD T-1 #####
+
   # HK EOD T-1
-  - nameList:
-      - HEALTH_CHECK EOD PnL Mark HTM T-1
-      - HEALTH_CHECK EOD PnL Mark NOFX T-1
+  - id: HK EOD Cal Pricing Analysis T-1 check
     active: false
-    expression: 0 45 9 ? * TUE-SAT, 0 10 10 ? * TUE-SAT
+    chain:
+      - type: SINGLE
+        id: DATA_CENTER EOD Pricing Analysis T-1
+        policy: SOE
+      - type: SINGLE
+        id: HEALTH_CHECK EOD Pricing Analysis T-1
+    triggerList:
+      - 0 30 8 ? * MON-FRI
 
-  - name: HEALTH_CHECK EOD Pricing Analysis T-1
+  - id: HK EOD Cal PnL Mark T-1 check
     active: false
-    expression: 0 45 9 ? * TUE-SAT
+    chain:
+      - type: LIST
+        idList:
+          - DATA_CENTER EOD PnL Mark HTM T-1
+          - DATA_CENTER EOD PnL Mark NOFX T-1
+        policy: SOE
+      - type: SINGLE
+        id: HEALTH_CHECK EOD PnL Mark HTM and NOFX T-1
+    triggerList:
+      - 0 45 9 ? * MON-FRI
+      - 0 10 10 ? * MON-FRI
 
-  # HK SOD
+  ##### HK SOD #####
 
-  # HK IntraDay
-  - name: DOWNSTREAM SCB PB
-    expression: 0 0 12 ? * MON-FRI, 0 0 16 ? * MON-FRI
-
-  # HK EOD
-  - name: HEALTH_CHECK EOD Quote - Future Commodity T
+  - id: HK SOD Cal Engine check
     active: false
-    expression: 0 0 16 ? * MON-FRI
+    chain:
+      - type: LIST
+        idList:
+          - DATA_CENTER Event Engine BadEvent
+          - DATA_CENTER Task Manager Engine BadEvent
+        policy: SOE
+      - type: SINGLE
+        id: HEALTH_CHECK Spec Engines by BadEvent
+    triggerList:
+      - 0 45 8 ? * MON-FRI
 
-  # BACK LOG
-  - name: HEALTH_CHECK EOD PnL Mark T
+  ##### HK IntraDay #####
+
+  # HK IntraDay - 12:00, 17:00
+  - id: HK IntraDay 1200 and 1700 Reporting
+    active: true
+    chain:
+      - type: SINGLE
+        id: DATA_CENTER HK FICC Process Trade T
+        policy: SOE
+      - type: SINGLE
+        id: REPORTING SCB PB EMAIL
+    triggerList:
+      - 0 1 12 ? * MON-FRI
+      - 0 1 17 ? * MON-FRI
+
+  # HK IntraDay - Frequency
+  - id: HK IntraDay Frequency 30 mins
     active: false
-    expression: 0 0 21 ? * MON-FRI
+    chain:
+      - type: SINGLE
+        id: DATA_CENTER HK FICC Process Trade T
+        policy: SOE
+      - type: SINGLE
+        id: DOWNSTREAM SCB PB FTP
+        policy: COE
+      - type: SINGLE
+        id: DOWNSTREAM MACRO FXO TRADE
+        policy: FAF
+    triggerList:
+      - 0 0/30 9-18 ? * MON-FRI
+
+  ##### HK EOD #####
+
+  # HK EOD - cut-off 16:30
+  - id: HK EOD 1630
+    active: false
+    chain:
+      - type: LIST
+        idList:
+          - DATA_CENTER TOMS MESSAGE T
+          - DATA_CENTER HK FICC Process Trade T
+        policy: SOE
+      - type: SINGLE
+        id: REPORTING FXO FIX EMAIL
+    triggerList:
+      - 0 31 16 ? * MON-FRI
+
+  # HK EOD - 15:50
+  - id: HK EOD 1550
+    active: false
+    chain:
+      - type: SINGLE
+        id: DATA_CENTER EOD Quote T
+        policy: SOE
+      - type: SINGLE
+        id: HEALTH_CHECK EOD Quote - Future Commodity T
+    triggerList:
+      - 0 51 15 ? * MON-FRI
+
+  # HK EOD - 16:10
+  - id: HK EOD 1610
+    active: false
+    chain:
+      - type: SINGLE
+        id: DATA_CENTER Curve T
+        policy: SOE
+      - type: SINGLE
+        id: HEALTH_CHECK Commodity Fwd Curve 1500 T
+    triggerList:
+      - 0 11 16 ? * MON-FRI
+
+  # BACK LOG - HK EOD Cal PnL Mark T check
+  - id: HK EOD Cal Pricing Analysis T check
+    active: false
+    chain:
+      - type: LIST
+        idList:
+          - DATA_CENTER EOD PnL Mark HTM T
+          - DATA_CENTER EOD PnL Mark NOFX T
+        policy: SOE
+      - type: SINGLE
+        id: HEALTH_CHECK EOD PnL Mark HTM and NOFX T
+    triggerList:
+      - 0 0 21 ? * MON-FRI
