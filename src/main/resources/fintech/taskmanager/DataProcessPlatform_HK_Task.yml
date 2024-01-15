@@ -54,6 +54,7 @@ taskList:
     chain:
       - type: SINGLE
         id: DATA_CENTER HK FICC Process Trade T
+        params:
         policy: SOE
       - type: SINGLE
         id: REPORTING SCB PB EMAIL
